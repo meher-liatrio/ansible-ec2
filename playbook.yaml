@@ -129,30 +129,29 @@
   become: yes
   vars:
     github_owner: 'meher-liatrio'
-    github_repo: 'learn-ansible'
+    github_repo: 'ansible-ec2'
     runner_token: "{{ lookup('env','RUNNER_TOKEN') }}"
     runner_name: 'ansible-runner'
     runner_work_dir: '_work'
     ansible_ssh_private_key_file: "~/.ssh/gh-runner-key.pem"
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-    ansible_user: 'ec2_user'
-    # ansible_ssh_private_key_file: "{{ key_pair.key}}"
-    # ansible_ssh_common_args: '-o StrictHostKeyChecking=no'    
+    ansible_user: 'ec2-user'    
 
   tasks:
     - name: Update system packages
-      apt:
+      dnf:
         update_cache: yes
 
     - name: Install necessary packages
-      apt:
+      dnf:
         name:
-          - curl
           - jq
+          - libicu
+          
 
     - name: Download runner package
       get_url:
-        url: "https://github.com/actions/runner/releases/download/v2.316.0/actions-runner-linux-arm64-2.316.0.tar.gz"
+        url: "https://github.com/actions/runner/releases/download/v2.316.0/actions-runner-linux-x64-2.316.0.tar.gz"
         dest: "/tmp/actions-runner.tar.gz"
 
     - name: Create runner directory
